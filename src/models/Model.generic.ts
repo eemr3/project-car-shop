@@ -20,6 +20,7 @@ abstract class ModelGeneric<T> implements Model<T> {
   }
 
   async update(id: string, entity: T): Promise<T | null> {
+    if (!isValidObjectId) return null;
     return this.modelMongoose.findOneAndUpdate(
       { _id: id }, 
       entity,
@@ -28,6 +29,7 @@ abstract class ModelGeneric<T> implements Model<T> {
   }
 
   async delete(id: string): Promise<T | null> {
+    if (!isValidObjectId) return null;
     return this.modelMongoose.findOneAndDelete({ _id: id });
   }
 }
