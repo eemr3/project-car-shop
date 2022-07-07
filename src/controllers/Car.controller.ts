@@ -38,14 +38,18 @@ class CarController extends ControllerGeneric<Car> {
     }
   };  
 
-  async read(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
+  read = async (
+    req: IRequestWithBody<Car>,
+    res: Response,
+  ): Promise<typeof res> => {
     try {
       const cars = await this.service.read();
+      
       return res.status(200).json(cars);
-    } catch (error) {
-      return res.send(error);
+    } catch (error: unknown) {
+      return res.status(500).json(error as undefined);
     }
-  }
+  };
 
   async readOne(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
     try {

@@ -27,7 +27,7 @@ abstract class ControllerGeneric<T> {
 
   abstract read(
     req: IRequestWithBody<T>,
-    res: Response<T | ResponseError>): Promise<typeof res>;
+    res: Response<T[]>): Promise<typeof res>;
 
   abstract readOne(req: IRequestWithBody<T | ResponseError>, res: Response):
   Promise<typeof res>;

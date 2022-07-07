@@ -8,7 +8,7 @@ abstract class ServiceGeneric<T> {
     return this.model.create(entity);
   }
 
-  async read(): Promise<T[]> {
+  async read(): Promise<T[]> {    
     return this.model.read();
   }
 
