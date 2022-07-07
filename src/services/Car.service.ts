@@ -9,13 +9,13 @@ class CarService extends ServiceGeneric<Car> {
   }
 
   create = async (
-    obj: Car,
+    entity: Car,
   ): Promise<Car | IServiceError> => {
-    const parsed = CarSchema.safeParse(obj);
+    const parsed = CarSchema.safeParse(entity);
     if (!parsed.success) {
       return { error: parsed.error };
     }
-    return this.model.create(obj);
+    return this.model.create(entity);
   };
 
   readOne = async (id: string): Promise<Car | IServiceError | null> => {
@@ -26,6 +26,20 @@ class CarService extends ServiceGeneric<Car> {
       throw new Error('Object not found');
     }
     return car;
+  };
+
+  update = async (
+    id: string,
+    entity: Car,
+  ): Promise<Car | IServiceError | null> => {
+    if (id.length < 24) return null;    
+    const parsed = CarSchema.safeParse(entity);
+    if (!parsed.success) {
+      return { error: parsed.error };
+    }
+    const carEdited = await this.model.update(id, entity);
+    if (!carEdited) throw new Error('Object not found');
+    return carEdited;
   };
 }
 
