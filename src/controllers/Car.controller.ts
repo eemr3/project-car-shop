@@ -51,15 +51,20 @@ class CarController extends ControllerGeneric<Car> {
     }
   };
 
-  async readOne(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
+  readOne = async (
+    req: IRequestWithBody<Car>,
+    res: Response<Car | ResponseError | null>,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       const car = await this.service.readOne(id);
-      return res.status(200).json(car);
+      return car ? res.status(200).json(car)
+        : res.status(400).json({ error: this.errors.isValidId });
     } catch (error) {
-      return res.send(error);
+      console.log(error);
+      return res.status(404).json({ error: this.errors.notFound });
     }
-  }
+  };
 
   async update(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
     try {
