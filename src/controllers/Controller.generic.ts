@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import ServiceGeneric from '../services/Service.generic';
 // import { Model } from '../interfaces/ModelInterface';
 
@@ -13,6 +13,7 @@ enum ControllerErrors {
   notFound = 'Object not found',
   requiredId = 'Id is required',
   badRequest = 'Bad request',
+  isValidId = 'Id must have 24 hexadecimal characters',
 }
 
 abstract class ControllerGeneric<T> {
@@ -29,7 +30,8 @@ abstract class ControllerGeneric<T> {
     req: IRequestWithBody<T>,
     res: Response<T[]>): Promise<typeof res>;
 
-  abstract readOne(req: IRequestWithBody<T | ResponseError>, res: Response):
+  abstract readOne(req: Request<{ id: string }>,
+    res: Response<T | ResponseError>):
   Promise<typeof res>;
 
   abstract update(req: IRequestWithBody<T | ResponseError>,
