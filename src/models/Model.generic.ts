@@ -1,4 +1,4 @@
-import { Model as M } from 'mongoose';
+import { isValidObjectId, Model as M } from 'mongoose';
 import { Model } from '../interfaces/ModelInterface';
 
 abstract class ModelGeneric<T> implements Model<T> {
@@ -15,6 +15,7 @@ abstract class ModelGeneric<T> implements Model<T> {
   }
 
   async readOne(id: string): Promise<T | null> {
+    if (!isValidObjectId) return null;
     return this.modelMongoose.findOne({ _id: id });
   }
 
