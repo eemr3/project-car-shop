@@ -34,8 +34,8 @@ abstract class ControllerGeneric<T> {
     res: Response<T | ResponseError>):
   Promise<typeof res>;
 
-  abstract update(req: IRequestWithBody<T | ResponseError>,
-    res: Response): Promise<typeof res>;
+  abstract update(req: IRequestWithBody<T>,
+    res: Response<T | ResponseError>): Promise<typeof res>;
 
   abstract delete(req: IRequestWithBody<T | ResponseError>,
     res: Response): Promise<typeof res>;

@@ -66,26 +66,30 @@ class CarController extends ControllerGeneric<Car> {
     }
   };
 
-  async update(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
+  update = async (
+    req: IRequestWithBody<Car>,
+    res: Response<Car | ResponseError | null>,
+  ): Promise<typeof res> => {
+    const { id } = req.params;
+    const { model, year, color, status, buyValue, doorsQty,
+      seatsQty } = req.body;
     try {
-      const { id } = req.params;
-      const { model, year,
-        color,
-        status,
-        buyValue,
-        doorsQty,
-        seatsQty } = req.body;
-      const car = await this.service.update(
-        id,
-        { model, year, color, status, buyValue, doorsQty, seatsQty },
-      );
+      const car = await this.service.update(id, {
+        model, year, color, status, buyValue, doorsQty, seatsQty });
+      if (!car) {
+        return res.status(400).json({ error: this.errors.isValidId });
+      }
+      if ('error' in car) return res.status(400).json(car);
       return res.status(200).json(car);
     } catch (error) {
-      return res.send(error);
+      return res.status(404).json({ error: this.errors.notFound });
     }
-  }
+  };
 
-  async delete(req: IRequestWithBody<Car>, res: Response): Promise<Response> {
+  delete = async (
+    req: IRequestWithBody<Car>,
+    res: Response,
+  ): Promise<Response> => {
     try {
       const { id } = req.params;
       const car = await this.service.delete(id);
@@ -93,7 +97,7 @@ class CarController extends ControllerGeneric<Car> {
     } catch (error) {
       return res.send(error);
     }
-  }
+  };
 }
 
 export default CarController;
