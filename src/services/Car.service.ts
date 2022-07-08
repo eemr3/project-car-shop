@@ -4,6 +4,8 @@ import ServiceGeneric from './Service.generic';
 import { IServiceError } from './interfaces/error.interface';
 
 class CarService extends ServiceGeneric<Car> {
+  private _errorMessage = 'Object not found';
+
   constructor(model = new CarModel()) {
     super(model);    
   }
@@ -23,7 +25,7 @@ class CarService extends ServiceGeneric<Car> {
     
     const car = await this.model.readOne(id);
     if (!car) {
-      throw new Error('Object not found');
+      throw new Error(this._errorMessage);
     }
     return car;
   };
@@ -38,9 +40,17 @@ class CarService extends ServiceGeneric<Car> {
       return { error: parsed.error };
     }
     const carEdited = await this.model.update(id, entity);
-    if (!carEdited) throw new Error('Object not found');
+    if (!carEdited) throw new Error(this._errorMessage);
     return carEdited;
   };
+
+  delete = async (id: string): Promise<Car | null> => {
+    if (id.length < 24) return null; 
+    const carDeleted = await this.model.delete(id);
+    if (!carDeleted) throw new Error(this._errorMessage);
+
+    return carDeleted;
+  }; 
 }
 
 export default CarService;
