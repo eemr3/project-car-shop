@@ -10,7 +10,7 @@ class CarService extends ServiceGeneric<Car> {
 
   create = async (
     entity: Car,
-  ): Promise<Car | IServiceError> => {
+  ): Promise<Car | IServiceError | null> => {
     const parsed = CarSchema.safeParse(entity);
     if (!parsed.success) {
       return { error: parsed.error };
@@ -18,7 +18,7 @@ class CarService extends ServiceGeneric<Car> {
     return this.model.create(entity);
   };
 
-  readOne = async (id: string): Promise<Car | IServiceError | null> => {
+  readOne = async (id: string): Promise<Car | null> => {
     if (id.length < 24) return null;
     
     const car = await this.model.readOne(id);

@@ -1,10 +1,11 @@
-import { Model } from '../interfaces/ModelInterface';
+// import { Model } from '../interfaces/ModelInterface';
+import ModelGeneric from '../models/Model.generic';
 import { IServiceError } from './interfaces/error.interface';
 
 abstract class ServiceGeneric<T> {
-  constructor(protected model: Model<T>) {}
+  constructor(protected model: ModelGeneric<T>) {}
 
-  async create(entity: T): Promise<T | IServiceError> {
+  async create(entity: T): Promise<T | null | IServiceError> {
     return this.model.create(entity);
   }
 
@@ -12,7 +13,7 @@ abstract class ServiceGeneric<T> {
     return this.model.read();
   }
 
-  async readOne(id: string): Promise<T | null | IServiceError> {
+  async readOne(id: string): Promise<T | null> {
     return this.model.readOne(id);
   }
 
@@ -20,7 +21,7 @@ abstract class ServiceGeneric<T> {
     return this.model.update(id, entity);
   }
 
-  async delete(id: string): Promise<T | null | IServiceError> {
+  async delete(id: string): Promise<T | null> {
     return this.model.delete(id);
   }
 }

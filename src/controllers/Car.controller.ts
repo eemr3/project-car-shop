@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import ControllerGeneric, { ResponseError } from './Controller.generic';
 import { IRequestWithBody } from './interfaces/Controller.interface';
 import CarService from '../services/Car.service';
@@ -21,12 +21,8 @@ class CarController extends ControllerGeneric<Car> {
     res: Response<Car | ResponseError>,
   ): Promise<typeof res> => {
     try {            
-      const { model, year, color, status, buyValue,
-        doorsQty,
-        seatsQty } = req.body;
-      const car = await this.service.create(
-        { model, year, color, status, buyValue, doorsQty, seatsQty },
-      );
+      const { body } = req;
+      const car = await this.service.create(body);
       if (!car) {
         return res.status(500).json({ error: this.errors.internal });
       }
@@ -38,22 +34,9 @@ class CarController extends ControllerGeneric<Car> {
     }
   };  
 
-  read = async (
-    req: IRequestWithBody<Car>,
-    res: Response,
-  ): Promise<typeof res> => {
-    try {
-      const cars = await this.service.read();
-      
-      return res.status(200).json(cars);
-    } catch (error: unknown) {
-      return res.status(500).json(error as undefined);
-    }
-  };
-
   readOne = async (
-    req: IRequestWithBody<Car>,
-    res: Response<Car | ResponseError | null>,
+    req: Request<{ id: string }>,
+    res: Response<Car | ResponseError>,
   ): Promise<typeof res> => {
     const { id } = req.params;
     try {

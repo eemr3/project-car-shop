@@ -21,14 +21,24 @@ abstract class ControllerGeneric<T> {
 
   protected errors = ControllerErrors;
 
-  constructor(protected service: ServiceGeneric<T | ResponseError>) {}
+  constructor(protected service: ServiceGeneric<T>) {}
 
   abstract create(
-    req: IRequestWithBody<T>, res: Response): Promise<typeof res>;
-
-  abstract read(
     req: IRequestWithBody<T>,
-    res: Response<T[]>): Promise<typeof res>;
+    res: Response<T | ResponseError>): Promise<typeof res>;
+
+  read = async (
+    _req: IRequestWithBody<T>,
+    res: Response<T[] | ResponseError>,
+  ): Promise<typeof res> => {
+    try {
+      const cars = await this.service.read();
+        
+      return res.status(200).json(cars);
+    } catch (error: unknown) {
+      return res.status(500).json(error as undefined);
+    }
+  };
 
   abstract readOne(req: Request<{ id: string }>,
     res: Response<T | ResponseError>):
@@ -37,8 +47,8 @@ abstract class ControllerGeneric<T> {
   abstract update(req: IRequestWithBody<T>,
     res: Response<T | ResponseError>): Promise<typeof res>;
 
-  abstract delete(req: IRequestWithBody<T | ResponseError>,
-    res: Response): Promise<typeof res>;
+  abstract delete(req: Request<{ id: string }>,
+    res: Response<T | ResponseError>): Promise<typeof res>;
 }
 
 export default ControllerGeneric;
