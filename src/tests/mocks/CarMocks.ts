@@ -15,6 +15,7 @@ export const returnCreateCar = {
   doorsQty: 2,
   seatsQty: 2,
   _id: '62c87efaf1f9d111bf4b6acc',
+  v: "vvvv"
 };
 
 export const returnFindAllCars = [
