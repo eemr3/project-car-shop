@@ -21,7 +21,7 @@ abstract class ControllerGeneric<T> {
 
   protected errors = ControllerErrors;
 
-  constructor(protected service: ServiceGeneric<T>) {}
+  constructor(public service: ServiceGeneric<T>) {}
 
   abstract create(
     req: IRequestWithBody<T>,
